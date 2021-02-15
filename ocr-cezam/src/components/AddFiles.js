@@ -45,14 +45,14 @@ class AddFiles extends React.Component {
             data.append(file, this.state.files[file]["file"]);
         }
 
-        // axios
-        // .post("http://localhost:8000/upload", data)
-        // .then((res) => {
-        //     alert("File Upload success");
-        // })
-        // .catch((err) => {
-        //     alert("File Upload Error")
-        // });
+        axios
+        .post("http://localhost:8000/upload", data)
+        .then((res) => {
+            alert("File Upload success");
+        })
+        .catch((err) => {
+            alert("File Upload Error")
+        });
     }
 
     render() {
