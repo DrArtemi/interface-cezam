@@ -32,37 +32,40 @@ class AddFiles extends React.Component {
 
     onChangeHandler = (event) => {
         // console.log(event.target.files[0]);
-        const newDict = { ...this.state.files[event.target.name], file: event.target.files[0] };
+        const newDict = { ...this.state.files[event.target.name], file: event.target.files };
         const newFiles = { ...this.state.files, [event.target.name]: newDict };
         this.setState({
             files: newFiles
         });
     }
 
-    onSubmitHandler = () => {
+    onSubmitHandler = (e) => {
         const data = new FormData();
         for (let file in this.state.files) {
-            data.append(file, this.state.files[file]["file"]);
+            if (this.state.files[file]["file"] != null) {
+                for (let i = 0; i < this.state.files[file]["file"].length; i++) {
+                    data.append(file, this.state.files[file]["file"][i]);
+                }
+            }
         }
-
-        // axios
-        // .post("http://localhost:8000/upload", data)
-        // .then((res) => {
-        //     alert("File Upload success");
-        // })
-        // .catch((err) => {
-        //     alert("File Upload Error")
-        // });
+        this.props.onNewFiles(true, null);
+        axios
+        .post("http://localhost:8000/upload", data)
+        .then((res) => {
+            this.props.onNewFiles(false, res.data.processedFile);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
     render() {
         let inputs = [];
         for (let file in this.state.files) {
-            console.log(this.state.files[file]["file"]);
             inputs.push(
                 <div key={file} className="cz-file-elem">
                     <label className="cz-label" htmlFor={file}>{this.state.files[file]["name"]}</label>
-                    <input className="cz-input" type="file" name={file} onChange={this.onChangeHandler}/>
+                    <input className="cz-input" type="file" name={file} multiple onChange={this.onChangeHandler}/>
                 </div>
             );
         }
