@@ -40,7 +40,6 @@ class AddFiles extends React.Component {
     }
 
     onSubmitHandler = (e) => {
-        e.preventDefault();
         const data = new FormData();
         for (let file in this.state.files) {
             if (this.state.files[file]["file"] != null) {
