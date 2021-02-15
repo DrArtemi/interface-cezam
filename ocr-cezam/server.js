@@ -22,7 +22,7 @@ app.use(cors(corsOpts));
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        let dir = 'public/ocr_files/' + file.fieldname;
+        let dir = '/home/adrien/ocr_files/' + file.fieldname;
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
@@ -58,10 +58,11 @@ app.post('/upload', multiple_upload, function (req, res) {
             }
         }
         let json_data = JSON.stringify(data, null, 4);
-        fs.writeFileSync('public/ocr_files/config.json', json_data);
-        
-        res.status(200).send(req.files);
+        fs.writeFileSync('/home/adrien/ocr_files/config.json', json_data);
+        console.log('Files uploaded !');
+        setTimeout(() => { res.status(200).send({'processedFile': '/home/adrien/ocr_files/config.json'}); }, 5000);
     } else {
+        console.log('Failed to upload files !');
         res.status(500).send('Error while uploading files');
     }
 });

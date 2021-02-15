@@ -48,11 +48,11 @@ class AddFiles extends React.Component {
                 }
             }
         }
-
+        this.props.onNewFiles(true, null);
         axios
         .post("http://localhost:8000/upload", data)
         .then((res) => {
-            console.log(res);
+            this.props.onNewFiles(false, res.data.processedFile);
         })
         .catch((err) => {
             console.log(err);
