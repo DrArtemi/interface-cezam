@@ -94,7 +94,7 @@
     text-align: center;
 }
 
-.cz-form-but input {
+.cz-form-but button {
     color: white;
     font-size: 16px;
     font-weight: 600;
@@ -103,4 +103,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.cz-form-but button:hover {
+    background: #8359ff;
 }
