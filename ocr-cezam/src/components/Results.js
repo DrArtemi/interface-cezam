@@ -52,7 +52,6 @@ const styles = theme => ({
 class Results extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
             currTab: 0,
         }
