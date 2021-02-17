@@ -51,6 +51,10 @@
     padding: 0 2vmin;
 }
 
+.cz-sidebar-content .cz-form-but {
+    margin-top: 3vmin;
+}
+
 /* AddFiles */
 
 .cz-addfiles-content {

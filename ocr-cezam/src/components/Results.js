@@ -101,7 +101,7 @@ class Results extends React.Component {
 
 Results.propTypes = {
     classes: PropTypes.object.isRequired,
-    processedFile: PropTypes.object.isRequired,
+    processedFile: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(Results);
