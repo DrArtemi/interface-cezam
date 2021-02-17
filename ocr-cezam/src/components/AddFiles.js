@@ -6,8 +6,8 @@ class AddFiles extends React.Component {
         super(props);
         this.state = {
             files: {
-                pieceIdentite: {
-                    name: "Pièce d'identité",
+                documentIdentite: {
+                    name: "Document d'identité",
                     file: null
                 },
                 releveBanquaire: {
