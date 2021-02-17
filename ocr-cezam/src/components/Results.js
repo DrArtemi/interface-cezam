@@ -52,9 +52,8 @@ const styles = theme => ({
 class Results extends React.Component {
     constructor(props) {
         super(props);
-
         this.state = {
-            currTab: 0,
+            currTab: 0
         }
     }
 
@@ -63,7 +62,7 @@ class Results extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, processedFile } = this.props;
         let value = this.state.currTab;
         return (
             <div className={classes.root}>
@@ -73,7 +72,7 @@ class Results extends React.Component {
                         value={this.state.currTab}
                         onChange={this.handleTabChange}
                     >
-                        <Tab label="Pièce d'identité" />
+                        <Tab label="Document d'identité" />
                         <Tab label="Relevé banquaire" />
                         <Tab label="Avis d'imposition" />
                         <Tab label="Tableau d'amortissement" />
@@ -81,19 +80,19 @@ class Results extends React.Component {
                     </Tabs>
                 </AppBar>
                 <TabPanel className="cz-tabpanel" value={value} index={0}>
-                    Coucou 1
+                    Coucou 1 <span>{processedFile}</span>
                 </TabPanel>
                 <TabPanel className="cz-tabpanel" value={value} index={1}>
-                    Coucou 2
+                    Coucou 2 <span>{processedFile}</span>
                 </TabPanel>
                 <TabPanel className="cz-tabpanel" value={value} index={2}>
-                    Coucou 3
+                    Coucou 3 <span>{processedFile}</span>
                 </TabPanel>
                 <TabPanel className="cz-tabpanel" value={value} index={3}>
-                    Coucou 4
+                    Coucou 4 <span>{processedFile}</span>
                 </TabPanel>
                 <TabPanel className="cz-tabpanel" value={value} index={4}>
-                    Coucou 5
+                    Coucou 5 <span>{processedFile}</span>
                 </TabPanel>
             </div>
         );
@@ -102,6 +101,7 @@ class Results extends React.Component {
 
 Results.propTypes = {
     classes: PropTypes.object.isRequired,
+    processedFile: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Results);

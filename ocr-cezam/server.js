@@ -1,10 +1,11 @@
-var resolve = require('path').resolve
-var express = require('express');
-var multer = require('multer');
-var cors = require('cors');
-var fs = require('fs');
+const resolve = require('path').resolve
+const { spawn } = require('child_process');
+const express = require('express');
+const multer = require('multer');
+const cors = require('cors');
+const fs = require('fs');
 
-var app = express();
+const app = express();
 
 const corsOpts = {
     origin: '*',
@@ -35,7 +36,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 var multiple_upload = upload.fields([
-    { name: 'pieceIdentite', maxCount: 10 },
+    { name: 'documentIdentite', maxCount: 10 },
     { name: 'releveBanquaire', maxCount: 10 },
     { name: 'avisImposition', maxCount: 10 },
     { name: 'tableauAmortissement', maxCount: 10 },
@@ -46,7 +47,7 @@ app.post('/upload', multiple_upload, function (req, res) {
     if (req.files) {
         // create config.json file
         data = {
-            'pieceIdentite': [],
+            'documentIdentite': [],
             'releveBanquaire': [],
             'avisImposition': [],
             'tableauAmortissement': [],
@@ -58,9 +59,35 @@ app.post('/upload', multiple_upload, function (req, res) {
             }
         }
         let json_data = JSON.stringify(data, null, 4);
-        fs.writeFileSync('/home/adrien/ocr_files/config.json', json_data);
+        var config_path = '/home/adrien/ocr_files/config.json';
+        var excel_path = '/home/adrien/ocr_files/processed.xlsx';
+        fs.writeFileSync(config_path, json_data);
         console.log('Files uploaded !');
-        setTimeout(() => { res.status(200).send({'processedFile': '/home/adrien/ocr_files/config.json'}); }, 5000);
+
+        var script_out = [];
+        const python = spawn(
+            '/home/adrien/miniconda3/envs/ocr/bin/python3',
+            [
+                '/home/adrien/Repositories/Cezam/ocr-cezam/ocr_cezam.py',
+                '-config',
+                config_path,
+                '-excel-path',
+                excel_path
+            ]
+        );
+
+        python.stdout.on('data', function (data) {
+            console.log(data.toString());
+        });
+
+        python.stderr.on('data', function(data) {
+            console.error(data.toString());
+        });        
+
+        python.on('close', (code) => {
+            console.log(`child process close all stdio with code ${code}`);
+            res.status(200).send({'processedFile': excel_path});
+        });
     } else {
         console.log('Failed to upload files !');
         res.status(500).send('Error while uploading files');
