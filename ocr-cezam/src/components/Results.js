@@ -1,12 +1,12 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { withStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-
+import ShowExcelData from './ShowExcelData';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -21,7 +21,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -53,8 +53,39 @@ class Results extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currTab: 0
+            currTab: 0,
+            files: {
+                documentIdentite: {
+                    name: "Document d'identité",
+                },
+                releveBanquaire: {
+                    name: "Relevé banquaire",
+                },
+                avisImposition: {
+                    name: "Avis d'imposition",
+                },
+                tableauAmortissement: {
+                    name: "Tableau d'amortissement",
+                },
+                liasseFiscale: {
+                    name: "Liasse fiscale",
+                }
+            }
         }
+
+        this.loadExcelFile();
+    }
+
+    loadExcelFile = (processedFile) => {
+        axios
+        .get("http://localhost:8000/get-excel-content")
+        .then((res) => {
+            console.log('Le excel est get');
+            console.log(res.data);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     }
 
     handleTabChange = (event, newValue) => {
@@ -64,6 +95,19 @@ class Results extends React.Component {
     render() {
         const { classes, processedFile } = this.props;
         let value = this.state.currTab;
+        let tabs = [];
+        let tab_panels = [];
+        let cnt = 0;
+        
+        for (let file in this.state.files) {
+            tabs.push(<Tab key={cnt} label={this.state.files[file]['name']} />);
+            tab_panels.push(
+                <TabPanel key={cnt} className="cz-tabpanel" value={value} index={cnt}>
+                    <ShowExcelData documentName={file} />
+                </TabPanel>
+            );
+            cnt++;
+        }
         return (
             <div className={classes.root}>
                 <AppBar position="static" className={classes.AppBar} elevation={1}>
@@ -72,28 +116,10 @@ class Results extends React.Component {
                         value={this.state.currTab}
                         onChange={this.handleTabChange}
                     >
-                        <Tab label="Document d'identité" />
-                        <Tab label="Relevé banquaire" />
-                        <Tab label="Avis d'imposition" />
-                        <Tab label="Tableau d'amortissement" />
-                        <Tab label="Liasse fiscale" />
+                        {tabs}
                     </Tabs>
                 </AppBar>
-                <TabPanel className="cz-tabpanel" value={value} index={0}>
-                    Coucou 1 <span>{processedFile}</span>
-                </TabPanel>
-                <TabPanel className="cz-tabpanel" value={value} index={1}>
-                    Coucou 2 <span>{processedFile}</span>
-                </TabPanel>
-                <TabPanel className="cz-tabpanel" value={value} index={2}>
-                    Coucou 3 <span>{processedFile}</span>
-                </TabPanel>
-                <TabPanel className="cz-tabpanel" value={value} index={3}>
-                    Coucou 4 <span>{processedFile}</span>
-                </TabPanel>
-                <TabPanel className="cz-tabpanel" value={value} index={4}>
-                    Coucou 5 <span>{processedFile}</span>
-                </TabPanel>
+                {tab_panels}
             </div>
         );
     }

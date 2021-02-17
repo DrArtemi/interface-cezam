@@ -1,9 +1,11 @@
-const resolve = require('path').resolve
-const { spawn } = require('child_process');
-const express = require('express');
-const multer = require('multer');
-const cors = require('cors');
-const fs = require('fs');
+import fs from 'fs';
+import XLSX from 'xlsx';
+import { resolve } from 'path';
+import { spawn } from 'child_process';
+import express from 'express';
+import multer, { diskStorage } from 'multer';
+import cors from 'cors';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 
 const app = express();
 
@@ -24,11 +26,11 @@ app.use(cors(corsOpts));
 var config_path = '/home/adrien/ocr_files/config.json';
 var excel_path = '/home/adrien/ocr_files/processed.xlsx';
 
-var storage = multer.diskStorage({
+var storage = diskStorage({
     destination: function (req, file, cb) {
         let dir = '/home/adrien/ocr_files/' + file.fieldname;
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir, { recursive: true });
+        if (!existsSync(dir)) {
+            mkdirSync(dir, { recursive: true });
         }
         cb(null, dir);
     },
@@ -49,7 +51,7 @@ var multiple_upload = upload.fields([
 app.post('/upload', multiple_upload, (req, res) => {
     if (req.files) {
         // create config.json file
-        data = {
+        let data = {
             'documentIdentite': [],
             'releveBanquaire': [],
             'avisImposition': [],
@@ -62,10 +64,9 @@ app.post('/upload', multiple_upload, (req, res) => {
             }
         }
         let json_data = JSON.stringify(data, null, 4);
-        fs.writeFileSync(config_path, json_data);
+        writeFileSync(config_path, json_data);
         console.log('Files uploaded !');
 
-        var script_out = [];
         const python = spawn(
             '/home/adrien/miniconda3/envs/ocr/bin/python3',
             [
@@ -96,8 +97,23 @@ app.post('/upload', multiple_upload, (req, res) => {
 });
 
 app.get('/download', (req, res) => {
-    console.log('Will try to download', excel_path);
     res.download(excel_path);
+});
+
+app.get('/get-excel-content', (req, res) => {
+    var buff = fs.readFileSync(excel_path);
+    var wb = XLSX.read(buff, {type: 'buffer'});
+
+    console.log(wb.SheetNames);
+    let data = {}
+    wb.SheetNames.forEach((sheetName) => {
+        let html = XLSX.utils.sheet_to_html(wb.Sheets[sheetName], {editable: true});
+        data[sheetName] = html
+    });
+    // for (let sheetName in wb.SheetNames) {
+        
+    // }
+    res.status(200).send({'excel_data': data});
 });
 
 app.listen(8000, function() {
