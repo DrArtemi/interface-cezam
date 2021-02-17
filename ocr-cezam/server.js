@@ -21,6 +21,9 @@ const corsOpts = {
 };
 app.use(cors(corsOpts));
 
+var config_path = '/home/adrien/ocr_files/config.json';
+var excel_path = '/home/adrien/ocr_files/processed.xlsx';
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let dir = '/home/adrien/ocr_files/' + file.fieldname;
@@ -43,7 +46,7 @@ var multiple_upload = upload.fields([
     { name: 'liasseFiscale', maxCount: 10 }
 ])
 
-app.post('/upload', multiple_upload, function (req, res) {
+app.post('/upload', multiple_upload, (req, res) => {
     if (req.files) {
         // create config.json file
         data = {
@@ -59,8 +62,6 @@ app.post('/upload', multiple_upload, function (req, res) {
             }
         }
         let json_data = JSON.stringify(data, null, 4);
-        var config_path = '/home/adrien/ocr_files/config.json';
-        var excel_path = '/home/adrien/ocr_files/processed.xlsx';
         fs.writeFileSync(config_path, json_data);
         console.log('Files uploaded !');
 
@@ -92,6 +93,11 @@ app.post('/upload', multiple_upload, function (req, res) {
         console.log('Failed to upload files !');
         res.status(500).send('Error while uploading files');
     }
+});
+
+app.get('/download', (req, res) => {
+    console.log('Will try to download', excel_path);
+    res.download(excel_path);
 });
 
 app.listen(8000, function() {

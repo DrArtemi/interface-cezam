@@ -23,7 +23,7 @@ class App extends React.Component {
 
     render() {
         let czContent = '';
-        if (!this.state.ocrProcessing && this.state.ocrProcessedFile == null) {
+        if (!this.state.ocrProcessing && this.state.ocrProcessedFile === null) {
             czContent = <AddFiles onNewFiles={this.handleProcessed} />;
         } else if (this.state.ocrProcessing) {
             czContent = <Loading />;
@@ -34,7 +34,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <div className="cz-sidebar">
-                    <Sidebar />
+                    <Sidebar download={this.state.ocrProcessedFile !== null}/>
                 </div>
                 <div className="cz-content">
                     {czContent}
