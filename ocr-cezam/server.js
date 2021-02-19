@@ -110,10 +110,7 @@ app.get('/get-excel-content', (req, res) => {
         let html = XLSX.utils.sheet_to_html(wb.Sheets[sheetName], {editable: true});
         data[sheetName] = html
     });
-    // for (let sheetName in wb.SheetNames) {
-        
-    // }
-    res.status(200).send({'excel_data': data});
+    res.status(200).send({'excelData': data});
 });
 
 app.listen(8000, function() {
