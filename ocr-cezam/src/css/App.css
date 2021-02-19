@@ -182,3 +182,39 @@
         opacity: 0;
     }
 }
+
+/* Results component */
+.cz-tabpanel {
+    display: flex;
+    flex: 1;
+}
+
+.cz-tab-content {
+    flex: 1;
+}
+
+/* ShowExcelData component */
+.cz-excel-content {
+    display: flex;
+    flex: 1;
+    height: 100%;
+}
+
+.cz-excel-content-tabs {
+    border-right: 1px solid #E5E5E5;
+}
+
+.cz-restable {
+    width: 100%;
+    position: relative;
+    color: #828282;
+}
+
+.cz-table-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}

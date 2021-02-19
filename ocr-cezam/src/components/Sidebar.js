@@ -1,7 +1,6 @@
 import logo from '../assets/logo-cezam.png'
 import addFile from '../assets/add-files.png'
 import React from 'react';
-import axios from 'axios';
 
 class Sidebar extends React.Component {
 

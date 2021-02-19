@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import AddFiles from './components/AddFiles';
 import Loading from './components/Loading';
 import Results from './components/Results';
@@ -10,31 +11,42 @@ class App extends React.Component {
         super(props);
         this.state = {
             ocrProcessing: false,
-            ocrProcessedFile: null
+            excelData: null
         };
     }
 
     handleProcessed = (processing, processedFile) => {
-        this.setState({ 
-            ocrProcessing: processing,
-            ocrProcessedFile: processedFile
-        });
+        if (processing !== true) {
+            axios
+            .get("http://localhost:8000/get-excel-content")
+            .then((res) => {
+                this.setState({ 
+                    ocrProcessing: processing,
+                    excelData: res.data['excelData']
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        } else {
+            this.setState({ ocrProcessing: processing });
+        }
     }
 
     render() {
         let czContent = '';
-        if (!this.state.ocrProcessing && this.state.ocrProcessedFile === null) {
+        if (!this.state.ocrProcessing && this.state.excelData === null) {
             czContent = <AddFiles onNewFiles={this.handleProcessed} />;
         } else if (this.state.ocrProcessing) {
             czContent = <Loading />;
         } else {
-            czContent = <Results processedFile={this.state.ocrProcessedFile}/>;
+            czContent = <Results excelData={this.state.excelData}/>;
         }
 
         return (
             <div className="App">
                 <div className="cz-sidebar">
-                    <Sidebar download={this.state.ocrProcessedFile !== null}/>
+                    <Sidebar download={this.state.excelData !== null}/>
                 </div>
                 <div className="cz-content">
                     {czContent}
