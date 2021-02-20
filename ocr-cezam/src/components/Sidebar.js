@@ -13,7 +13,7 @@ class Sidebar extends React.Component {
 
         return (
             <div className="cz-sidebar-content">
-                <img src={logo} className="logo-cezam" alt="logo" />
+                <a href="/"><img src={logo} className="logo-cezam" alt="logo" /></a>
                 <p className="cz-sidebar-subtitle">Vous ouvre les portes du crédit</p>
                 <img src={addFile} className="logo-addfile" alt="addfile" />
                 <p className="cz-sidebar-text">Veuillez ajouter vos documents !</p>

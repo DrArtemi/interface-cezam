@@ -218,3 +218,15 @@
     right: 0;
     overflow: auto;
 }
+
+.cz-restable table {
+    border-spacing: 0;
+}
+
+.cz-restable table tr:nth-child(2n) {
+    background-color: rgba(146, 113, 246, 0.1);
+}
+
+.cz-restable table tr td {
+    padding: 0 .7rem;
+}

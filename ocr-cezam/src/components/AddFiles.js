@@ -31,7 +31,6 @@ class AddFiles extends React.Component {
     }
 
     onChangeHandler = (event) => {
-        // console.log(event.target.files[0]);
         const newDict = { ...this.state.files[event.target.name], file: event.target.files };
         const newFiles = { ...this.state.files, [event.target.name]: newDict };
         this.setState({
@@ -48,11 +47,11 @@ class AddFiles extends React.Component {
                 }
             }
         }
-        this.props.onNewFiles(true, null);
+        this.props.onNewFiles(true);
         axios
         .post("http://localhost:8000/upload", data)
         .then((res) => {
-            this.props.onNewFiles(false, res.data.processedFile);
+            this.props.onNewFiles(false);
         })
         .catch((err) => {
             console.log(err);
