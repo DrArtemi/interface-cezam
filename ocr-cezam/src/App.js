@@ -15,7 +15,7 @@ class App extends React.Component {
         };
     }
 
-    handleProcessed = (processing, processedFile) => {
+    handleProcessed = (processing) => {
         if (processing !== true) {
             axios
             .get("http://localhost:8000/get-excel-content")
