@@ -1,5 +1,6 @@
 import fs from 'fs';
 import XLSX from 'xlsx';
+import path from 'path';
 import { resolve } from 'path';
 import { spawn } from 'child_process';
 import express from 'express';
@@ -23,12 +24,14 @@ const corsOpts = {
 };
 app.use(cors(corsOpts));
 
-var config_path = '/home/adrien/ocr_files/config.json';
-var excel_path = '/home/adrien/ocr_files/processed.xlsx';
+let processDir = process.env.PROCESS_DIR;
+let condaEnv = process.env.CONDA_ENV;
+let ocrScript = process.env.OCR_SCRIPT;
 
 var storage = diskStorage({
     destination: function (req, file, cb) {
-        let dir = '/home/adrien/ocr_files/' + file.fieldname;
+        let now = new Date();
+        let dir = path.join(processDir, now.getTime().toString(), file.fieldname);
         if (!existsSync(dir)) {
             mkdirSync(dir, { recursive: true });
         }
@@ -58,23 +61,32 @@ app.post('/upload', multiple_upload, (req, res) => {
             'tableauAmortissement': [],
             'liasseFiscale': []
         }
+        let saveDir = null;
         for (let file in req.files) {
             for (let d of req.files[file]) {
+                if (saveDir === null) {
+                    saveDir = resolve(path.dirname(d.destination));
+                }
                 data[file].push(resolve(d.path));
             }
         }
-        let json_data = JSON.stringify(data, null, 4);
-        writeFileSync(config_path, json_data);
+        let jsonData = JSON.stringify(data, null, 4);
+
+        let configPath = path.join(saveDir, 'config.json');
+        let excelPath = path.join(saveDir, 'processed.xlsx');
+        let timestamp = path.basename(saveDir)
+
+        writeFileSync(configPath, jsonData);
         console.log('Files uploaded !');
 
         const python = spawn(
-            '/home/adrien/miniconda3/envs/ocr/bin/python3',
+            condaEnv,
             [
-                '/home/adrien/Repositories/Cezam/ocr-cezam/ocr_cezam.py',
+                ocrScript,
                 '-config',
-                config_path,
+                configPath,
                 '-excel-path',
-                excel_path
+                excelPath
             ]
         );
 
@@ -88,7 +100,7 @@ app.post('/upload', multiple_upload, (req, res) => {
 
         python.on('close', (code) => {
             console.log(`child process close all stdio with code ${code}`);
-            res.status(200).send({'processedFile': excel_path});
+            res.status(200).send({'timestamp': timestamp});
         });
     } else {
         console.log('Failed to upload files !');
@@ -97,20 +109,30 @@ app.post('/upload', multiple_upload, (req, res) => {
 });
 
 app.get('/download', (req, res) => {
-    res.download(excel_path);
+    if (req.query.timestamp !== undefined) {
+        let excelPath = path.join(processDir, req.query.timestamp, 'processed.xlsx');
+        res.download(excelPath);
+    } else {
+        res.status(404).send("No timestamp provided");
+    }
 });
 
 app.get('/get-excel-content', (req, res) => {
-    var buff = fs.readFileSync(excel_path);
-    var wb = XLSX.read(buff, {type: 'buffer'});
+    if (req.query.timestamp !== undefined) {
+        let excelPath = path.join(processDir, req.query.timestamp, 'processed.xlsx');
+        let buff = fs.readFileSync(excelPath);
+        let wb = XLSX.read(buff, {type: 'buffer'});
 
-    console.log(wb.SheetNames);
-    let data = {}
-    wb.SheetNames.forEach((sheetName) => {
-        let html = XLSX.utils.sheet_to_html(wb.Sheets[sheetName], {editable: true});
-        data[sheetName] = html
-    });
-    res.status(200).send({'excelData': data});
+        console.log(wb.SheetNames);
+        let data = {}
+        wb.SheetNames.forEach((sheetName) => {
+            let html = XLSX.utils.sheet_to_html(wb.Sheets[sheetName], {editable: true});
+            data[sheetName] = html
+        });
+        res.status(200).send({'excelData': data});
+    } else {
+        res.status(404).send("No timestamp provided");
+    }
 });
 
 app.listen(8000, function() {

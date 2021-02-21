@@ -41,7 +41,7 @@ class ShowExcelData extends React.Component {
     }
 
     render() {
-        const { documentName, dataTable } = this.props;
+        const { dataTable } = this.props;
         const { activeIndex } = this.state;
         let tabs = [];
         let tab_panels = [];
@@ -50,7 +50,6 @@ class ShowExcelData extends React.Component {
         for (let table in dataTable) {
             tabs.push(<MyTab key={cnt} label={table} />);
             if (cnt === activeIndex) {
-                //TODO: Styliser ces tableaux
                 tab_panels.push(
                     <TabPanel key={cnt} className="cz-restable" value={activeIndex} index={cnt}>
                         <div dangerouslySetInnerHTML={{__html: dataTable[table]}}></div>
