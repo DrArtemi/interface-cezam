@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import urljoin from 'url-join';
 
 class AddFiles extends React.Component {
     constructor(props) {
@@ -47,11 +48,11 @@ class AddFiles extends React.Component {
                 }
             }
         }
-        this.props.onNewFiles(true);
+        this.props.onNewFiles(true, null);
         axios
-        .post("http://localhost:8000/upload", data)
+        .post(urljoin(process.env.REACT_APP_SERVER_URL, "upload"), data)
         .then((res) => {
-            this.props.onNewFiles(false);
+            this.props.onNewFiles(false, res.data.timestamp);
         })
         .catch((err) => {
             console.log(err);
