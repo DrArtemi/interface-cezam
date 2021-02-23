@@ -1,5 +1,6 @@
 # Custom
 ./ocr-cezam/public/ocr_files/
+package-lock.json
 
 # Logs
 logs
