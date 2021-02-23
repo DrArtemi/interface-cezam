@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import urljoin from 'url-join';
 import AddFiles from './components/AddFiles';
 import Loading from './components/Loading';
 import Results from './components/Results';
@@ -11,18 +12,22 @@ class App extends React.Component {
         super(props);
         this.state = {
             ocrProcessing: false,
-            excelData: null
+            excelData: null,
+            timestamp: null
         };
     }
 
-    handleProcessed = (processing) => {
+    handleProcessed = (processing, timestamp) => {
         if (processing !== true) {
             axios
-            .get("http://localhost:8000/get-excel-content")
+            .get(urljoin(process.env.REACT_APP_SERVER_URL, "get-excel-content"),
+                { params: { timestamp: timestamp } }
+            )
             .then((res) => {
                 this.setState({ 
                     ocrProcessing: processing,
-                    excelData: res.data['excelData']
+                    excelData: res.data['excelData'],
+                    timestamp: timestamp
                 });
             })
             .catch((err) => {
@@ -46,7 +51,7 @@ class App extends React.Component {
         return (
             <div className="App">
                 <div className="cz-sidebar">
-                    <Sidebar download={this.state.excelData !== null}/>
+                    <Sidebar download={this.state.timestamp}/>
                 </div>
                 <div className="cz-content">
                     {czContent}
