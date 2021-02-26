@@ -13,24 +13,25 @@
 
 .cz-content {
     width: 80%;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 /* Sidebar */
 
 .cz-sidebar-content {
     background: rgba(246, 244, 254, 0.9);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
 }
 
 .cz-sidebar-subtitle {
     margin-top: 0;
     color: #828282;
     font-size: 18px;
+    padding: 0 1rem;
+    text-align: center;
 }
 
 .logo-cezam {
@@ -59,7 +60,8 @@
 
 .cz-addfiles-content {
     background: white;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -116,11 +118,11 @@
 /* Results component */
 .cz-results-content {
     background: white;
-    height: 100vh;
+    min-height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* justify-content: center; */
 }
 
 .cz-tabpanel {
@@ -131,7 +133,7 @@
 /* Loading component */
 .cz-loading-content {
     background: white;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;

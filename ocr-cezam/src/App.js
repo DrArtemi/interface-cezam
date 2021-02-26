@@ -6,6 +6,7 @@ import Loading from './components/Loading';
 import Results from './components/Results';
 import Sidebar from './components/Sidebar';
 import './css/App.css';
+import './css/Responsive.css';
 
 class App extends React.Component {
     constructor(props) {
