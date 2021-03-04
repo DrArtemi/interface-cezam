@@ -45,7 +45,7 @@ var storage = diskStorage({
 var upload = multer({ storage: storage });
 var multiple_upload = upload.fields([
     { name: 'documentIdentite', maxCount: 10 },
-    { name: 'releveBanquaire', maxCount: 10 },
+    { name: 'releveBancaire', maxCount: 10 },
     { name: 'avisImposition', maxCount: 10 },
     { name: 'tableauAmortissement', maxCount: 10 },
     { name: 'liasseFiscale', maxCount: 10 }
@@ -56,7 +56,7 @@ app.post('/upload', multiple_upload, (req, res) => {
         // create config.json file
         let data = {
             'documentIdentite': [],
-            'releveBanquaire': [],
+            'releveBancaire': [],
             'avisImposition': [],
             'tableauAmortissement': [],
             'liasseFiscale': []

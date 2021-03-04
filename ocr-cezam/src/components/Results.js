@@ -58,8 +58,8 @@ class Results extends React.Component {
                 documentIdentite: {
                     name: "Document d'identité",
                 },
-                releveBanquaire: {
-                    name: "Relevé banquaire",
+                releveBancaire: {
+                    name: "Relevé bancaire",
                 },
                 avisImposition: {
                     name: "Avis d'imposition",

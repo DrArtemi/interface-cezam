@@ -11,8 +11,8 @@ class AddFiles extends React.Component {
                     name: "Document d'identité",
                     file: null
                 },
-                releveBanquaire: {
-                    name: "Relevé banquaire",
+                releveBancaire: {
+                    name: "Relevé bancaire",
                     file: null
                 },
                 avisImposition: {
