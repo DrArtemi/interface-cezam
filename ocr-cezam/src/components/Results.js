@@ -69,6 +69,9 @@ class Results extends React.Component {
                 },
                 liasseFiscale: {
                     name: "Liasse fiscale",
+                },
+                bulletinPaie: {
+                    name: "Bulletin de paie",
                 }
             }
         }

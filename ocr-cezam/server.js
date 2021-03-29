@@ -48,7 +48,8 @@ var multiple_upload = upload.fields([
     { name: 'releveBancaire', maxCount: 10 },
     { name: 'avisImposition', maxCount: 10 },
     { name: 'tableauAmortissement', maxCount: 10 },
-    { name: 'liasseFiscale', maxCount: 10 }
+    { name: 'liasseFiscale', maxCount: 10 },
+    { name: 'bulletinPaie', maxCount: 10 }
 ])
 
 app.post('/upload', multiple_upload, (req, res) => {
@@ -59,7 +60,8 @@ app.post('/upload', multiple_upload, (req, res) => {
             'releveBancaire': [],
             'avisImposition': [],
             'tableauAmortissement': [],
-            'liasseFiscale': []
+            'liasseFiscale': [],
+            'bulletinPaie': []
         }
         let saveDir = null;
         for (let file in req.files) {

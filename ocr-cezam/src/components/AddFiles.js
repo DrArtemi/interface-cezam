@@ -26,6 +26,10 @@ class AddFiles extends React.Component {
                 liasseFiscale: {
                     name: "Liasse fiscale",
                     file: null
+                },
+                bulletinPaie: {
+                    name: "Bulletin de paie",
+                    file: null
                 }
             }
         }
